@@ -1,2 +1,1 @@
-# 2048 game clicker
-Test task for just clicking 2048 game
+# Mini-framework to ease automation testing basic infrastructure deployment. simple mvn project
