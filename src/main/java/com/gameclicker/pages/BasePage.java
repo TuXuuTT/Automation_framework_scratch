@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -30,8 +31,8 @@ public abstract class BasePage {
     private static Properties props = new Properties();
     protected final Logger log = LogManager.getLogger(this);
     private final WebDriver wd;
-    private Wait visibilityWait;
-    private Wait invisibilityWait;
+    private Wait<WebDriver> visibilityWait;
+    private Wait<WebDriver> invisibilityWait;
 
     public BasePage(WebDriver wd) {
         this.wd = wd;
@@ -46,19 +47,19 @@ public abstract class BasePage {
         }
 
         visibilityWait = new FluentWait<WebDriver>(getWebDriverCurrent())
-                .withTimeout(TIME_WAIT_SECONDS * 20, TimeUnit.SECONDS)
+                .withTimeout(TIME_WAIT_SECONDS * 10L, TimeUnit.SECONDS)
                 .pollingEvery(1, TimeUnit.SECONDS)
                 .ignoring(NoSuchElementException.class)
                 .ignoring(StaleElementReferenceException.class);
 
         invisibilityWait
                 = new FluentWait<WebDriver>(getWebDriverCurrent())
-                .withTimeout(TIME_WAIT_SECONDS * 20, TimeUnit.SECONDS)
+                .withTimeout(TIME_WAIT_SECONDS * 10L, TimeUnit.SECONDS)
                 .pollingEvery(10, TimeUnit.MILLISECONDS)
                 .ignoring(NoSuchElementException.class)
                 .ignoring(StaleElementReferenceException.class);
 
-        PageFactory.initElements(wd, this);
+        PageFactory.initElements(new AjaxElementLocatorFactory(wd, TIME_WAIT_SECONDS * 2), this);
     }
 
     protected static Properties getProps() {
